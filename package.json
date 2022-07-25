@@ -1,0 +1,23 @@
+{
+  "name": "sfcc-1page-preferences",
+  "version": "1.0.5",
+  "description": "Creates one html page for all the sites preferences in a SFCC instance.",
+  "main": "index.js",
+  "keywords": [
+    "sfcc",
+    "site preferences"
+  ],
+  "author": "Ketan Gupta",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "chalk": "^5.0.1",
+    "cli-spinners": "^2.6.1",
+    "optionator": "^0.9.1",
+    "ora": "^6.1.2"
+  },
+  "bin": {
+    "sfcc-1page-preferences": "./index.js"
+  }
+}
