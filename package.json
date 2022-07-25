@@ -17,6 +17,11 @@
     "optionator": "^0.9.1",
     "ora": "^6.1.2"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ketan9190/sfcc-1page-preferences.git"
+  },
+  "homepage": "https://github.com/ketan9190/sfcc-1page-preferences#readme",
   "bin": {
     "sfcc-1page-preferences": "./index.js"
   }
