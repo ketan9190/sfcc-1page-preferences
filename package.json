@@ -3,6 +3,9 @@
   "version": "1.0.7",
   "description": "Creates one html page for all the sites preferences in a SFCC instance.",
   "main": "index.js",
+  "engines": {
+    "node": ">=14.14.0"
+  },
   "keywords": [
     "sfcc",
     "site preferences"

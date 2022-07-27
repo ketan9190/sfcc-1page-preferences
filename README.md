@@ -4,7 +4,8 @@ It is used to build a one page view of all the sites preferences within a SFCC i
 
 ## Prerequisites
 
-OCAPI settings in BM:
+#### Minimum Node Version Required : 14.14.0
+#### OCAPI settings in BM:
 - Go to Administration > Site Development > Open Commerce API Settings
 - Select Type : Data
 - Select Context : Global
