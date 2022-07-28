@@ -1,6 +1,7 @@
 # SFCC-One Page Preferences
 
 It is used to build a one page view of all the sites preferences within a SFCC instance.
+![demo_sfcc-1page-preferences](https://user-images.githubusercontent.com/33390019/181574724-7dc71227-cf04-4e07-a537-79e32c972cdf.gif)
 
 ## Prerequisites
 
