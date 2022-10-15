@@ -3,6 +3,13 @@
 It is used to build a one page view of all the sites preferences within a SFCC instance.
 ![demo_sfcc-1page-preferences](https://user-images.githubusercontent.com/33390019/181574724-7dc71227-cf04-4e07-a537-79e32c972cdf.gif)
 
+## Features
+- Genearates One page view of custom preferences for all the sites in BM
+- Easy type ahead filtering by preference ID or name
+- Includes preference grouping, so no more hunting for finding the preference group and login to BM for just reading the value.
+- Direct link to a preference group in BM if value needs to be changed. (Loads for the site already in context in BM)
+
+
 ## Prerequisites
 
 #### Minimum Node Version Required : 14.14.0
