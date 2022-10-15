@@ -1,6 +1,6 @@
 {
   "name": "sfcc-1page-preferences",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Creates one html page for all the sites preferences in a SFCC instance.",
   "main": "index.js",
   "engines": {
