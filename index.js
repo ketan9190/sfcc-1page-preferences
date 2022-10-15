@@ -175,7 +175,7 @@ async function generateOnePagePreferences() {
             return accumulator;
         }, {});
 
-    let fileLocation = createHTML(sortedResult);
+    let fileLocation = createHTML(sortedResult, config.hostname);
     spinner.succeed(chalk.green(`Created: One Page Preferences file`));
     console.log(chalk.yellow(`File Location: ${fileLocation}`));
 }

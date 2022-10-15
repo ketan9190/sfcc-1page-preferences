@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path';
 
-export const createHTML = function (data) {
+export const createHTML = function (data, host) {
 
     var writeFile = fs.createWriteStream(path.join(process.cwd(), 'SFCC-OnePagePreferences.html'), {
         flags: 'w+'
@@ -17,15 +17,24 @@ export const createHTML = function (data) {
         <!-- Bootstrap CSS -->
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-         <script>
+        <script>
+		  var timer;
                 $(document).on('keyup', 'input.search', function () {
-                    var value = $(this).val().toLowerCase();
-                    // eslint-disable-next-line array-callback-return
-                    $('.search-row:not(.d-none)').filter(function () {
-                        $(this).toggle($(this).children('.search-field').text().toLowerCase()
-                            .indexOf(value) > -1);
-                        
-                    });
+				  clearTimeout(timer);
+				   timer = setTimeout(()=> {
+						var value = $(this).val().toLowerCase();
+						$('.search-row:not(.d-none)').filter(function () {
+							$(this).toggle($(this).children('.search-field').text().toLowerCase()
+								.indexOf(value) > -1);
+
+								if($(this).children('.search-field').text().toLowerCase()
+								.indexOf(value) > -1){
+									let groupClass = $(this).attr('data-group');
+									$('.group-row.'+groupClass).show();
+								}
+							
+						});
+					}, 500);
                 });
 
                 $( document ).tooltip();
@@ -75,18 +84,20 @@ export const createHTML = function (data) {
 
     writeFile.write(`</tr>
     </thead>`)
+    let groupIndex = 0;
     for (let group in data) {
+        let groupBM_URL = `<a href="https://${host}/on/demandware.store/Sites-Site/default/ViewApplication-BM?#/?preference#site_preference_group_attributes!id!${group}" target="_blank">${group}</a>`
+        let groupClass = `group${groupIndex++}`;
 
-
-        writeFile.write(`<tr class="search-row">
-        <th scope="row"  class="table-primary">${group}</th>
+        writeFile.write(`<tr class="search-row group-row ${groupClass}">
+        <th scope="row"  class="table-primary">${groupBM_URL}</th>
         </tr>`)
 
         if (data[group].hits) {
             for (let hit of data[group].hits) {
                 let attributeName = hit.display_name && hit.display_name.default ? hit.display_name.default : '';
 
-                writeFile.write(`<tr class="search-row">
+                writeFile.write(`<tr class="search-row" data-group="${groupClass}">
             <th scope="row" class="search-field" title="Group - ${group}">${attributeName}<span class="font-weight-light">
              (${hit.id})</span></th>
             `)
