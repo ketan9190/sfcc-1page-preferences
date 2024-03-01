@@ -1,6 +1,11 @@
 import fs from 'fs'
 import path from 'path';
 
+var sigLinks="";
+var productionLinks = "";
+var stagingLinks = "";
+var developmentLinks = "";
+
 export const createHTML = function (data, host) {
 
     var writeFile = fs.createWriteStream(path.join(process.cwd(), 'SFCC-OnePagePreferences.html'), {
@@ -37,6 +42,22 @@ export const createHTML = function (data, host) {
 					}, 500);
                 });
 
+                $(document).on('click', 'button.change-host', function () {
+                    var updatedHostName = $('input.host-value').val();
+                            $('.group-row a').each((a,e)=>{
+                            e.hostname = updatedHostName;
+                            })
+                    })
+
+                    $(document).on('click', 'div.easy-links a', function () {
+                        var updatedHostName = $(this).attr("host");
+                                $('.group-row a').each((a,e)=>{
+                                e.hostname = updatedHostName;
+                                })
+                            $('div.easy-links a').css('color','#007bff');
+                            $(this).css('color','red');
+                        })
+
                 $( document ).tooltip();
 
          </script>
@@ -57,20 +78,37 @@ export const createHTML = function (data, host) {
       </head>
       <body>
     <div>
-    <h2 class="text-center mt-4 mb-4">SFCC-One Page Preferences</h2>
-    
-    <div class="button-wrapper">
-       <input type="text" class="form-control m-2 mx-auto search" placeholder="Search Site Preference" style="
-    width: 51vw;
-">
+        <h2 class="text-center mt-4 mb-4">SFCC-One Page Preferences</h2>
+        <div class="container">
+		<div class="row easy-links">
+            ${sigLinks}
+            ${productionLinks}
+            ${stagingLinks}
+            ${developmentLinks}
+		</div>
+		</div>
+
+<div class="d-flex ">
+	    
+    <div class="input-group mb-1 m-2" style="width: 31vw;">
+        <input type="text" class="form-control host-value" placeholder="Host to change Group URLs" >
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary change-host" type="button">Change</button>
+        </div>
     </div>
+	
+    <div class="button-wrapper">
+       <input type="text" class="form-control m-2  search" placeholder="Search Site Preference" style="width: 51vw;">
+    </div>
+
+</div>
 
 
     <table class="table table-sm table-striped table-bordered table-hover">
     <thead>
         <tr class="table-primary">
           <th scope="col">#</th>
-    `)
+    `);
 
     for (let group in data) {
         if (data[group].hits && data[group].hits.length) {
