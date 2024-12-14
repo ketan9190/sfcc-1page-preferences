@@ -85,7 +85,7 @@ async function generateOnePagePreferences() {
         authResponse = await axios({
             url: `https://account.demandware.com/dw/oauth2/access_token?grant_type=client_credentials`,
             method: 'POST',
-            timeout: 5000,
+            timeout: 10000,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Authorization': `Basic ${base64data}`,
@@ -146,7 +146,7 @@ async function generateOnePagePreferences() {
 
                         }
                     },
-                    "select": "(hits.(id,site_values,attribute_definition.(default_value.(value)),display_name.(default)))",
+                    "select": "(hits.(id,site_values,attribute_definition.(default_value.(value),value_type),display_name.(default)))",
                     "count": 200
                 }
             }).then(res => {

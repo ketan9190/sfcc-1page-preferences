@@ -6,6 +6,55 @@ var productionLinks = "";
 var stagingLinks = "";
 var developmentLinks = "";
 
+var SIG = {
+}
+
+var PIG = {
+}
+
+if(Object.keys(SIG).length){
+    sigLinks+=` <div class="col">
+    CICD
+    <ul>`
+    Object.keys(SIG).forEach(function(key) {
+        sigLinks+=`<li><a href='#' host="${key}.dx.commercecloud.salesforce.com">${SIG[key]}</a> -
+        <a href="https://${key}.dx.commercecloud.salesforce.com/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        </li>`
+    })
+
+    sigLinks+=` </ul>
+    </div>`
+}
+
+if(Object.keys(PIG).length){
+    productionLinks+=` <div class="col">
+    Production
+    <ul>`
+    stagingLinks+=` <div class="col">
+    Staging
+    <ul>`
+    developmentLinks+=` <div class="col">
+    Development
+    <ul>`
+    Object.keys(PIG).forEach(function(key) {
+    
+        productionLinks+=`<li><a href='#' host="production-${key}.demandware.net">PROD ${PIG[key]}</a> -
+        <a href="https://production-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        </li>`;
+        stagingLinks+=`<li><a href='#' host="staging-${key}.demandware.net">STG ${PIG[key]}</a> -
+        <a href="https://staging-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        </li>`;
+        developmentLinks+=`<li><a href='#' host="development-${key}.demandware.net">DEV ${PIG[key]}</a> -
+        <a href="https://development-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        </li>`;
+        })
+        productionLinks+=` </ul>
+    </div>`
+        stagingLinks+=` </ul>
+    </div>`
+        developmentLinks+=` </ul>
+    </div>`
+}
 export const createHTML = function (data, host) {
 
     var writeFile = fs.createWriteStream(path.join(process.cwd(), 'SFCC-OnePagePreferences.html'), {
@@ -51,12 +100,26 @@ export const createHTML = function (data, host) {
 
                     $(document).on('click', 'div.easy-links a', function () {
                         var updatedHostName = $(this).attr("host");
+                        if(updatedHostName){
                                 $('.group-row a').each((a,e)=>{
                                 e.hostname = updatedHostName;
                                 })
                             $('div.easy-links a').css('color','#007bff');
                             $(this).css('color','red');
+                            }
                         })
+
+            $(document).on('click', '.format-button', function () {
+                let jsonText = $(this).parent().text().replace('{;}','').trim();
+                try {
+                    const jsonObject = JSON.parse(jsonText);
+                    const formattedJSON = JSON.stringify(jsonObject, null, 2);
+                $(this).parent().html('<pre>'+formattedJSON+'</pre>');
+                
+                } catch (e) {
+                    alert('Invalid JSON');
+                }
+                });
 
                 $( document ).tooltip();
 
@@ -72,6 +135,24 @@ export const createHTML = function (data, host) {
             thead {
                 position : sticky;
                 top:0;
+                z-index: 1;
+            }
+ 
+            .format-button {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                padding: 5px 10px;
+                background-color: #54acd2;
+                color: black;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 12px;
+                opacity: .6;
+            }
+            .format-button:hover {
+                background-color: #0056b3;
             }
     </style>
         <title>SFCC-One Page Preferences</title>
@@ -141,6 +222,8 @@ export const createHTML = function (data, host) {
             `)
                 if (hit.site_values) {
                     let defaultValue = hit.attribute_definition && hit.attribute_definition.default_value ? hit.attribute_definition.default_value.value : '';
+                    let valueType = hit.attribute_definition && hit.attribute_definition.value_type;
+                    let isJSON = false;
                     for (let siteValue in hit.site_values) {
                         let value = hit.site_values[siteValue] && hit.site_values[siteValue].markup ? hit.site_values[siteValue].markup : hit.site_values[siteValue];
                         if (value === null) {
@@ -149,7 +232,17 @@ export const createHTML = function (data, host) {
                         if (value && typeof value === 'string' && value.indexOf('<') >= 0 && value.indexOf('>') >= 0) {
                             value = value.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                         }
-                        writeFile.write(`<td class="col-2 search-field">${value}</td>`)
+                        if(valueType && valueType==='text'){
+                            try{
+                                value = JSON.parse(value);
+                                value = JSON.stringify(value,null,2);
+                                isJSON = true;
+                            }catch(e){
+
+                            }
+
+                        }
+                        writeFile.write(`<td class="col-2 search-field">${value} ${isJSON ?  `<button class="format-button">{;}</button>` : ''}</td>`)
                     }
                 }
                 writeFile.write(`</tr>`);
