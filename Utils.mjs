@@ -121,6 +121,30 @@ export const createHTML = function (data, host) {
                 }
                 });
 
+                $(document).ready(function () {
+                    const groupRows = $('.group-row');
+                    const tableOffset = $('table').offset().top;
+                
+                    $(window).on('scroll', function () {
+                        const scrollTop = $(window).scrollTop();
+                
+                        groupRows.each(function (index) {
+                            const groupRow = $(this);
+                            const nextGroupRow = groupRows.eq(index + 1);
+                            const currentOffset = groupRow.offset().top;
+                            const nextOffset = nextGroupRow.length ? nextGroupRow.offset().top : Number.MAX_VALUE;
+                
+                            if (scrollTop + groupRow.outerHeight() >= nextOffset) {
+                                var a = nextOffset - scrollTop - groupRow.outerHeight();
+                                groupRow.css('transform', 'translateY('+a+'px)');
+                            } else if (scrollTop + groupRow.outerHeight() > currentOffset) {
+                                groupRow.css('transform', 'translateY(0)');
+                            } else {
+                                groupRow.css('transform', '');
+                            }
+                        });
+                    });
+                });
                 $( document ).tooltip();
 
          </script>
@@ -153,6 +177,13 @@ export const createHTML = function (data, host) {
             }
             .format-button:hover {
                 background-color: #0056b3;
+            }
+            .group-row {
+                position: sticky;
+                top: 0;
+                z-index: 2; /* Higher than other rows */
+                background: #f8f9fa; /* Ensure it has a background */
+                border-bottom: 2px solid #dee2e6; /* Optional: Visual distinction */
             }
     </style>
         <title>SFCC-One Page Preferences</title>
