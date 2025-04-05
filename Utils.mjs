@@ -121,30 +121,6 @@ export const createHTML = function (data, host) {
                 }
                 });
 
-                $(document).ready(function () {
-                    const groupRows = $('.group-row');
-                    const tableOffset = $('table').offset().top;
-                
-                    $(window).on('scroll', function () {
-                        const scrollTop = $(window).scrollTop();
-                
-                        groupRows.each(function (index) {
-                            const groupRow = $(this);
-                            const nextGroupRow = groupRows.eq(index + 1);
-                            const currentOffset = groupRow.offset().top;
-                            const nextOffset = nextGroupRow.length ? nextGroupRow.offset().top : Number.MAX_VALUE;
-                
-                            if (scrollTop + groupRow.outerHeight() >= nextOffset) {
-                                var a = nextOffset - scrollTop - groupRow.outerHeight();
-                                groupRow.css('transform', 'translateY('+a+'px)');
-                            } else if (scrollTop + groupRow.outerHeight() > currentOffset) {
-                                groupRow.css('transform', 'translateY(0)');
-                            } else {
-                                groupRow.css('transform', '');
-                            }
-                        });
-                    });
-                });
                 $( document ).tooltip();
 
          </script>
@@ -240,7 +216,7 @@ export const createHTML = function (data, host) {
         let groupClass = `group${groupIndex++}`;
 
         writeFile.write(`<tr class="search-row group-row ${groupClass}">
-        <th scope="row"  class="table-primary">${groupBM_URL}</th>
+        <th scope="row"  class="table-primary search-field">${groupBM_URL}</th>
         </tr>`)
 
         if (data[group].hits) {
