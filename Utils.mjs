@@ -98,16 +98,24 @@ export const createHTML = function (data, host) {
                             })
                     })
 
-                    $(document).on('click', 'div.easy-links a', function () {
-                        var updatedHostName = $(this).attr("host");
-                        if(updatedHostName){
-                                $('.group-row a').each((a,e)=>{
-                                e.hostname = updatedHostName;
-                                })
-                            $('div.easy-links a').css('color','#007bff');
-                            $(this).css('color','red');
-                            }
-                        })
+                    $(document).on("click", "div.easy-links a", function () {
+                    var updatedHostName = $(this).attr("host");
+                    if (updatedHostName) {
+                        $(this).addClass("linkselected");
+                        $(this).css("color", "red");
+                    }
+                    });
+
+                    $(document).on("click", ".group-row a", function (e) {
+                    e.preventDefault();
+                    var that = $(this);
+                    var a = $(".linkselected").length;
+                    $(".linkselected").each((a, e) => {
+                        that[0].hostname = $(e).attr("host");
+                        window.open(that[0].href, "_blank");
+                    });
+                    });
+
 
             $(document).on('click', '.format-button', function () {
                 let jsonText = $(this).parent().text().replace('{;}','').trim();
