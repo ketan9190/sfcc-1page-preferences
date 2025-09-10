@@ -18,7 +18,7 @@ if(Object.keys(SIG).length){
     <ul>`
     Object.keys(SIG).forEach(function(key) {
         sigLinks+=`<li><a href='#' host="${key}.dx.commercecloud.salesforce.com">${SIG[key]}</a> -
-        <a href="https://${key}.dx.commercecloud.salesforce.com/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        <a class="bmlink" href="https://${key}.dx.commercecloud.salesforce.com/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
         </li>`
     })
 
@@ -39,13 +39,13 @@ if(Object.keys(PIG).length){
     Object.keys(PIG).forEach(function(key) {
     
         productionLinks+=`<li><a href='#' host="production-${key}.demandware.net">PROD ${PIG[key]}</a> -
-        <a href="https://production-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        <a class="bmlink" href="https://production-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
         </li>`;
         stagingLinks+=`<li><a href='#' host="staging-${key}.demandware.net">STG ${PIG[key]}</a> -
-        <a href="https://staging-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        <a class="bmlink" href="https://staging-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
         </li>`;
         developmentLinks+=`<li><a href='#' host="development-${key}.demandware.net">DEV ${PIG[key]}</a> -
-        <a href="https://development-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
+        <a class="bmlink" href="https://development-${key}.demandware.net/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage" target="_blank">BM</a>
         </li>`;
         })
         productionLinks+=` </ul>
@@ -72,66 +72,69 @@ export const createHTML = function (data, host) {
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script>
-		  var timer;
+                var timer;
                 $(document).on('keyup', 'input.search', function () {
-				  clearTimeout(timer);
-				   timer = setTimeout(()=> {
-						var value = $(this).val().toLowerCase();
-						$('.search-row:not(.d-none)').filter(function () {
-							$(this).toggle($(this).children('.search-field').text().toLowerCase()
-								.indexOf(value) > -1);
+                    clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        var value = $(this).val().toLowerCase();
+                        $('.search-row:not(.d-none)').filter(function () {
+                            $(this).toggle($(this).children('.search-field').text().toLowerCase()
+                                .indexOf(value) > -1);
 
-								if($(this).children('.search-field').text().toLowerCase()
-								.indexOf(value) > -1){
-									let groupClass = $(this).attr('data-group');
-									$('.group-row.'+groupClass).show();
-								}
-							
-						});
-					}, 500);
+                            if ($(this).children('.search-field').text().toLowerCase()
+                                .indexOf(value) > -1) {
+                                let groupClass = $(this).attr('data-group');
+                                $('.group-row.' + groupClass).show();
+                            }
+
+                        });
+                    }, 500);
                 });
 
                 $(document).on('click', 'button.change-host', function () {
                     var updatedHostName = $('input.host-value').val();
-                            $('.group-row a').each((a,e)=>{
-                            e.hostname = updatedHostName;
-                            })
+                    $('.group-row a').each((a, e) => {
+                        e.hostname = updatedHostName;
                     })
+                })
 
-                    $(document).on("click", "div.easy-links a", function () {
+                $(document).on("click", "div.easy-links a", function () {
                     var updatedHostName = $(this).attr("host");
                     if (updatedHostName) {
-                        $(this).addClass("linkselected");
-                        $(this).css("color", "red");
+                        $(this).toggleClass("linkselected");
                     }
-                    });
+                });
 
-                    $(document).on("click", ".group-row a", function (e) {
+                $(document).on("click", ".group-row a", function (e) {
                     e.preventDefault();
                     var that = $(this);
                     var a = $(".linkselected").length;
-                    $(".linkselected").each((a, e) => {
-                        that[0].hostname = $(e).attr("host");
+                    if (a) {
+                        $(".linkselected").each((a, e) => {
+                            that[0].hostname = $(e).attr("host");
+                            window.open(that[0].href, "_blank");
+                        });
+                    }
+                    else {
                         window.open(that[0].href, "_blank");
-                    });
-                    });
-
-
-            $(document).on('click', '.format-button', function () {
-                let jsonText = $(this).parent().text().replace('{;}','').trim();
-                try {
-                    const jsonObject = JSON.parse(jsonText);
-                    const formattedJSON = JSON.stringify(jsonObject, null, 2);
-                $(this).parent().html('<pre>'+formattedJSON+'</pre>');
-                
-                } catch (e) {
-                    alert('Invalid JSON');
-                }
+                    }
                 });
 
-                $( document ).tooltip();
+                $(document).on('click', '.format-button', function () {
+                    let jsonText = $(this).parent().text().replace('{;}', '').trim();
+                    try {
+                        const jsonObject = JSON.parse(jsonText);
+                        const formattedJSON = JSON.stringify(jsonObject, null, 2);
+                        $(this).parent().html('<pre>' + formattedJSON + '</pre>');
 
-         </script>
+                    } catch (e) {
+                        alert('Invalid JSON');
+                    }
+                });
+
+                $(document).tooltip();
+
+    </script>
          <style>
             table {
             
@@ -169,6 +172,9 @@ export const createHTML = function (data, host) {
                 background: #f8f9fa; /* Ensure it has a background */
                 border-bottom: 2px solid #dee2e6; /* Optional: Visual distinction */
             }
+            .linkselected{
+			color : red
+			}
     </style>
         <title>SFCC-One Page Preferences</title>
       </head>
@@ -178,11 +184,11 @@ export const createHTML = function (data, host) {
         <div class="container">
 		<div class="row easy-links">
             ${sigLinks}
-            ${productionLinks}
-            ${stagingLinks}
             ${developmentLinks}
+            ${stagingLinks}
+            ${productionLinks}
 		</div>
-		</div>
+        </div>
 
 <div class="d-flex ">
 	    
