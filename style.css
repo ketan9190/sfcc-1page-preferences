@@ -1,0 +1,37 @@
+table {
+  table-layout: fixed;
+  overflow-wrap: break-word;
+  width: 100vw;
+}
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.format-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 5px 10px;
+  background-color: #54acd2;
+  color: black;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.6;
+}
+.format-button:hover {
+  background-color: #0056b3;
+}
+.group-row {
+  position: sticky;
+  top: 0;
+  z-index: 2; /* Higher than other rows */
+  background: #f8f9fa; /* Ensure it has a background */
+  border-bottom: 2px solid #dee2e6; /* Optional: Visual distinction */
+}
+.linkselected {
+  color: red;
+}

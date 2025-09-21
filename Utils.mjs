@@ -55,6 +55,11 @@ if(Object.keys(PIG).length){
         developmentLinks+=` </ul>
     </div>`
 }
+
+
+const jsFileContent = fs.readFileSync('./script.js', 'utf8');
+const cssFileContent = fs.readFileSync('./style.css', 'utf8');
+
 export const createHTML = function (data, host) {
 
     var writeFile = fs.createWriteStream(path.join(process.cwd(), 'SFCC-OnePagePreferences.html'), {
@@ -72,109 +77,11 @@ export const createHTML = function (data, host) {
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script>
-                var timer;
-                $(document).on('keyup', 'input.search', function () {
-                    clearTimeout(timer);
-                    timer = setTimeout(() => {
-                        var value = $(this).val().toLowerCase();
-                        $('.search-row:not(.d-none)').filter(function () {
-                            $(this).toggle($(this).children('.search-field').text().toLowerCase()
-                                .indexOf(value) > -1);
-
-                            if ($(this).children('.search-field').text().toLowerCase()
-                                .indexOf(value) > -1) {
-                                let groupClass = $(this).attr('data-group');
-                                $('.group-row.' + groupClass).show();
-                            }
-
-                        });
-                    }, 500);
-                });
-
-                $(document).on('click', 'button.change-host', function () {
-                    var updatedHostName = $('input.host-value').val();
-                    $('.group-row a').each((a, e) => {
-                        e.hostname = updatedHostName;
-                    })
-                })
-
-                $(document).on("click", "div.easy-links a", function () {
-                    var updatedHostName = $(this).attr("host");
-                    if (updatedHostName) {
-                        $(this).toggleClass("linkselected");
-                    }
-                });
-
-                $(document).on("click", ".group-row a", function (e) {
-                    e.preventDefault();
-                    var that = $(this);
-                    var a = $(".linkselected").length;
-                    if (a) {
-                        $(".linkselected").each((a, e) => {
-                            that[0].hostname = $(e).attr("host");
-                            window.open(that[0].href, "_blank");
-                        });
-                    }
-                    else {
-                        window.open(that[0].href, "_blank");
-                    }
-                });
-
-                $(document).on('click', '.format-button', function () {
-                    let jsonText = $(this).parent().text().replace('{;}', '').trim();
-                    try {
-                        const jsonObject = JSON.parse(jsonText);
-                        const formattedJSON = JSON.stringify(jsonObject, null, 2);
-                        $(this).parent().html('<pre>' + formattedJSON + '</pre>');
-
-                    } catch (e) {
-                        alert('Invalid JSON');
-                    }
-                });
-
-                $(document).tooltip();
+               ${jsFileContent}
 
     </script>
          <style>
-            table {
-            
-                table-layout: fixed;
-                    overflow-wrap: break-word;
-                    width : 100vw
-                
-            }
-            thead {
-                position : sticky;
-                top:0;
-                z-index: 1;
-            }
- 
-            .format-button {
-                position: absolute;
-                top: 5px;
-                right: 5px;
-                padding: 5px 10px;
-                background-color: #54acd2;
-                color: black;
-                border: none;
-                border-radius: 3px;
-                cursor: pointer;
-                font-size: 12px;
-                opacity: .6;
-            }
-            .format-button:hover {
-                background-color: #0056b3;
-            }
-            .group-row {
-                position: sticky;
-                top: 0;
-                z-index: 2; /* Higher than other rows */
-                background: #f8f9fa; /* Ensure it has a background */
-                border-bottom: 2px solid #dee2e6; /* Optional: Visual distinction */
-            }
-            .linkselected{
-			color : red
-			}
+           ${cssFileContent}
     </style>
         <title>SFCC-One Page Preferences</title>
       </head>
